@@ -3,3 +3,8 @@
    top: 0px;
    right:0px;
 }
+
+.buttons {
+    border-radius:5px;
+    text-align:center;
+}
