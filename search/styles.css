@@ -7,7 +7,6 @@ nav ul li {
 header {
     background-color: lightgray;
     padding: 10px;
-    margin-bottom: 10px;
 }
 
 nav ul {
@@ -21,14 +20,21 @@ nav ul li a {
     color: blue;
 }
 
+#search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+}
+
 #search-button {
     margin-top: 10px;
-    width: 200px;
+    width: inherit;
     height: 20px;
     border: none;
     border-radius: 15px;
 }
 
-    #search-button:hover {
-        background-color: #808080; /* Change the background color on hover */
-    }
+#search-button:hover {
+    background-color: #808080; /* Change the background color on hover */
+}
