@@ -6,7 +6,7 @@
 </head>
 <body>
     <header>
-        <nav id="links">
+        <nav>
             <ul>
                 <li>
                     <a href="imagesearch.html">Go to Google Image Search</a>
@@ -18,10 +18,12 @@
         </nav>
     </header>
 
-    <div>
+    <div id="search-container">
         <form action="https://www.google.com/search" method="get">
-            <input type="text" name="q">
-            <input class="buttons" type="submit" value="Google Search">
+            <input type="text" name="q" placeholder="Enter search query">
+            <div id="button-container">
+                <input id="search-button" type="submit" value="Google Search">
+            </div>
         </form>
     </div>
 </body>

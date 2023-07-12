@@ -6,7 +6,7 @@
 </head>
 <body>
     <header>
-        <nav id="links">
+        <nav>
             <ul>
                 <li>
                     <a href="index.html">Go back to Google Search</a>
@@ -15,13 +15,15 @@
         </nav>
     </header>
 
-    <div>
+    <div id="search-container">
         <form action="https://www.google.com/search" method="get">
             <input type="text" name="as_q">
             <input type="text" name="as_epq">
             <input type="text" name="as_oq">
             <input type="text" name="as_eq">
-            <input class="buttons" type="submit" value="Google Advanced Search">
+            <div id="search-container">
+                <input id="search-button" type="submit" value="Google Advanced Search">
+            </div>
         </form>
     </div>
 </body>
