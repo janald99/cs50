@@ -15,16 +15,34 @@
         </nav>
     </header>
 
-    <div id="search-container">
-        <form action="https://www.google.com/search" method="get">
-            <input type="text" name="as_q">
-            <input type="text" name="as_epq">
-            <input type="text" name="as_oq">
-            <input type="text" name="as_eq">
-            <div id="search-container">
-                <input id="search-button" type="submit" value="Google Advanced Search">
-            </div>
-        </form>
-    </div>
+    <main>
+
+        <div id="advanced-search-container">
+            <h3 id="find-pages">Find pages with ...</h3>
+
+            <form action="https://www.google.com/search" method="get">
+                <div class="advanced-search-field">
+                    <label for="all-words">all these words:</label>
+                    <input type="text" name="as_q" id="all-words">
+                </div>
+                <div class="advanced-search-field">
+                    <label for="exact-phrase">this exact word or phrase:</label>
+                    <input type="text" name="as_epq" id="exact-phrase">
+                </div>
+                <div class="advanced-search-field">
+                    <label for="any-words">any of these words:</label>
+                    <input type="text" name="as_oq" id="any-words">
+                </div>
+                <div class="advanced-search-field">
+                    <label for="none-words">none of these words:</label>
+                    <input type="text" name="as_eq" id="none-words">
+                </div>
+
+                <div id="button-container">
+                    <input id="advanced-search-button" type="submit" value="Google Advanced Search">
+                </div>
+            </form>
+        </div>
+    </main>
 </body>
 </html>

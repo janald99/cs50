@@ -24,17 +24,63 @@ nav ul li a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 100px;
+    justify-content: center;
+    height: 100vh;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#search-container input {
+    border-radius: 15px;
+    border-width: 1px;
+}
+
+#advanced-search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+    margin-left: 30px;
 }
 
 #search-button {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-family: arial,sans-serif;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+#advanced-search-button {
     margin-top: 10px;
-    width: inherit;
-    height: 20px;
-    border: none;
-    border-radius: 15px;
+    height: 30px;
+    color: #fff;
+    background-color: #4d90fe;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #3079ed;
 }
 
 #search-button:hover {
     background-color: #808080; /* Change the background color on hover */
+}
+
+
+.advanced-search-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.advanced-search-field label {
+    width: 200px;
 }
