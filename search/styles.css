@@ -49,7 +49,7 @@ nav ul li a {
     margin-left: 30px;
 }
 
-#search-button {
+#search-button, #lucky-button {
     border: 1px solid #f8f9fa;
     color: #3c4043;
     font-family: arial,sans-serif;
