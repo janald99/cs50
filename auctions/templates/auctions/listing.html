@@ -25,9 +25,15 @@
             </form>
         {% endif %}
 
+        {% if listing.closed %}
+            <div class="alert alert-warning">
+                The auction is closed.
+            </div>
+        {% endif %}
+
         {% if won_auction %}
             <div class="alert alert-success">
-                Congratulations! You won the auction.
+                Congratulations! You won the auction!
             </div>
         {% endif %}
 
@@ -53,6 +59,8 @@
         </form>
         
     {% endif %}
+    
+    <p>Category: {{ listing.category }}</p>
     
     <p>Creator: {{ listing.creator.username }}</p>
 

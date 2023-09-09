@@ -13,11 +13,16 @@ from .forms import CreateListingForm, BidForm, CommentForm
 
 
 def index(request):
-    listings = Listing.objects.all()
+    active_listings = Listing.objects.filter(closed=False)
     return render(request, "auctions/index.html", {
-        "listings": listings
+        "listings": active_listings
     })
 
+def closed_listings_view(request):
+    closed_listings = Listing.objects.filter(closed=True)
+    return render(request, "auctions/closed_listings.html", {
+        "listings": closed_listings
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -137,16 +142,22 @@ def listing_view(request, listing_id):
 
         elif "close_auction" in request.POST:
             if listing.creator == request.user and not listing.closed:  
-                # Close the auction and mark listing as closed
-                listing.closed = True
-                listing.save()
-
                 # Check if there's a highest bidder
                 highest_bid = listing.bids.aggregate(Max("bid_amount"))["bid_amount__max"]
                 if highest_bid is not None:
                     winner_bid = listing.bids.filter(bid_amount=highest_bid).first()
-                    if winner_bid and winner_bid.bidder == request.user:
+                    if winner_bid:
+                        listing.winner = winner_bid.bidder
+                    else:
+                        listing.winner = None
+                    listing.save()
+                    
+                    if winner_bid.bidder == request.user:
                         won_auction = True
+
+                # Close the auction and mark listing as closed
+                listing.closed = True
+                listing.save()
 
     is_in_watchlist = listing in request.user.watchlist.all() if request.user.is_authenticated else False
 
