@@ -77,3 +77,28 @@ def new_post(request):
         return render(request, "network/index.html", {
             "posts": Post.objects.all().order_by('-timestamp')
         })
+    
+def profile(request, username):
+    try:
+        user_profile = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return HttpResponse("User not found", status=404)
+
+    if request.user.is_authenticated:
+        # Check if the logged-in user is viewing their own profile
+        is_self = user_profile == request.user
+
+        # Check if the logged-in user is following this user
+        is_following = False
+        if not is_self:
+            is_following = user_profile.followers.filter(id=request.user.id).exists()
+
+    # Retrieve the user's posts in reverse chronological order
+    user_posts = Post.objects.filter(user=user_profile).order_by('-timestamp')
+
+    return render(request, "network/profile.html", {
+        "user_profile": user_profile,
+        "is_self": is_self,
+        "is_following": is_following,
+        "user_posts": user_posts,
+    })

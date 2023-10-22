@@ -1,19 +1,20 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h2>All Posts</h2>
+    <h2>{{ user_profile.username }}'s Profile</h2>
 
-    <!-- New Post Form -->
-    <div class="new-post-form">
-        <form method="post" action="{% url 'new_post' %}">
-            {% csrf_token %}
-            <textarea name="post_content" placeholder="What's on your mind?"></textarea>
-            <button type="submit">Post</button>
-        </form>
-    </div>
+    <p>Followers: {{ user_profile.followers.count }}</p>
+    <p>Following: {{ user_profile.following.count }}</p>
 
+    {% if user.is_authenticated %}
+        {% if not is_self %}
+            <button id="follow-button">Unfollow</button>
+        {% endif %}
+    {% endif %}
+
+    <h3>Posts</h3>
     <div class="post-list">
-        {% for post in posts %}
+        {% for post in user_posts %}
             <div class="post">
                 <p><a href="{% url 'profile' post.user.username %}"><strong>{{ post.user.username }}</strong></a></p>
                 <p>{{ post.content }}</p>
@@ -24,4 +25,5 @@
             <p>No posts yet.</p>
         {% endfor %}
     </div>
+
 {% endblock %}
