@@ -10,7 +10,7 @@ from .models import User, Post
 
 def index(request):
     posts = Post.objects.all().order_by('-timestamp')
-    return render(request, "network/index.html", {"posts": posts})
+    return render(request, "network/index.html", {"posts": posts, "user": request.user})
 
 
 def login_view(request):
@@ -84,12 +84,14 @@ def profile(request, username):
     except User.DoesNotExist:
         return HttpResponse("User not found", status=404)
 
+    is_self = False
+    is_following = False
+
     if request.user.is_authenticated:
         # Check if the logged-in user is viewing their own profile
         is_self = user_profile == request.user
 
         # Check if the logged-in user is following this user
-        is_following = False
         if not is_self:
             is_following = user_profile.followers.filter(id=request.user.id).exists()
 

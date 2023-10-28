@@ -4,13 +4,15 @@
     <h2>All Posts</h2>
 
     <!-- New Post Form -->
-    <div class="new-post-form">
-        <form method="post" action="{% url 'new_post' %}">
-            {% csrf_token %}
-            <textarea name="post_content" placeholder="What's on your mind?"></textarea>
-            <button type="submit">Post</button>
-        </form>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="new-post-form">
+            <form method="post" action="{% url 'new_post' %}">
+                {% csrf_token %}
+                <textarea name="post_content" placeholder="What's on your mind?"></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+    {% endif %}
 
     <div class="post-list">
         {% for post in posts %}
