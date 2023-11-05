@@ -1,14 +1,16 @@
 {% extends "network/layout.html" %}
 
-{% block body %}
-    <h2>{{ user_profile.username }}'s Profile</h2>
+{% load static %}
 
-    <p>Followers: {{ user_profile.followers.count }}</p>
-    <p>Following: {{ user_profile.following.count }}</p>
+{% block body %}
+    <h2 id="user-header" data-username="{{ user_profile.username }}">{{ user_profile.username }}'s Profile</h2>
+
+    <p id="follower-count">Followers: {{ user_profile.followers.count }}</p>
+    <p id="following-count">Following: {{ user_profile.following.count }}</p>
 
     {% if user.is_authenticated %}
         {% if not is_self %}
-            <button id="follow-button">Unfollow</button>
+            <button id="follow-button" data-is-following="{{ is_following }}">Follow</button>
         {% endif %}
     {% endif %}
 
@@ -26,4 +28,13 @@
         {% endfor %}
     </div>
 
+    <script>
+        // Set the CSRF token as a JavaScript variable
+        const csrfToken = "{{ csrf_token }}";
+        // var followersCount = "{{ user_profile.followers.count }}";
+        // var followingCount = "{{ user_profile.following.count }}";
+        // var updatedFollowers = parseInt("{{ user_profile.followers.count }}", 10);
+        // var updatedFollowing = parseInt("{{ user_profile.following.count }}", 10);
+    </script>
+    <script src="{% static 'network/profile.js' %}"></script>
 {% endblock %}

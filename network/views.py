@@ -1,7 +1,8 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -104,3 +105,33 @@ def profile(request, username):
         "is_following": is_following,
         "user_posts": user_posts,
     })
+
+
+@login_required
+def follow_user(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    username = data.get("username")
+
+    user_to_follow = User.objects.get(username=username)
+
+    action = data.get("action")
+
+    if action == "follow":
+        request.user.following.add(user_to_follow)
+        user_to_follow.followers.add(request.user)
+        request.user.save()
+        user_to_follow.save()
+        response_data = {"message": "User followed successfully."}
+    elif action == "unfollow":
+        request.user.following.remove(user_to_follow)
+        user_to_follow.followers.remove(request.user)
+        request.user.save()
+        user_to_follow.save()
+        response_data = {"message": "User unfollowed successfully."}
+    else:
+        response_data = {"message": "Invalid action."}
+
+    return JsonResponse(response_data)
