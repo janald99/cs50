@@ -1,5 +1,7 @@
 {% extends "network/layout.html" %}
 
+{% load static %}
+
 {% block body %}
     <h2>All Posts</h2>
 
@@ -16,11 +18,20 @@
 
     <div class="post-list">
         {% for post in page_obj %}
-            <div class="post">
+            <div class="post" data-post-id="{{ post.id }}">
                 <p><a href="{% url 'profile' post.user.username %}"><strong>{{ post.user.username }}</strong></a></p>
-                <p>{{ post.content }}</p>
+                <div class="post-content">
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="edit-container" style="display: none;">
+                    <textarea class="edit-textarea"></textarea>
+                    <button class="save-edit-btn">Save</button>
+                </div>
                 <p>Posted on: {{ post.timestamp }}</p>
                 <p>Likes: {{ post.likes.count }}</p>
+                {% if user.is_authenticated and post.user == user %}
+                    <button class="edit-post-btn">Edit</button>
+                {% endif %}
             </div>
         {% empty %}
             <p>No posts yet.</p>
@@ -43,4 +54,10 @@
             {% endif %}
         </ul>
     </nav>
+
+    <script>
+        const csrf_token = "{{ csrf_token }}";
+    </script>
+    <script src="{% static 'network/index.js' %}"></script>
+
 {% endblock %}

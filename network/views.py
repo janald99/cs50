@@ -25,7 +25,7 @@ def following(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, "network/following.html", {"following_posts": following_posts, "page_obj": page_obj})
-    
+
 def login_view(request):
     if request.method == "POST":
 
@@ -91,6 +91,22 @@ def new_post(request):
             "posts": Post.objects.all().order_by('-timestamp')
         })
     
+@login_required
+def edit_post(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    post_id = data.get("post_id")
+    edited_content = data.get("content")
+
+    post = Post.objects.get(id=post_id)
+
+    post.content = edited_content
+    post.save()
+
+    return JsonResponse({"success": True})
+
 def profile(request, username):
     try:
         user_profile = User.objects.get(username=username)
