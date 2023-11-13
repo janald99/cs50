@@ -1,0 +1,37 @@
+{% extends "network/layout.html" %}
+
+{% block title %}Following Posts{% endblock %}
+
+{% block body %}
+    <h2>Posts from Users You Follow</h2>
+
+    <div class="post-list">
+        {% for post in page_obj %}
+            <div class="post">
+                <p><a href="{% url 'profile' post.user.username %}"><strong>{{ post.user.username }}</strong></a></p>
+                <p>{{ post.content }}</p>
+                <p>Posted on: {{ post.timestamp }}</p>
+                <p>Likes: {{ post.likes.count }}</p>
+            </div>
+        {% empty %}
+            <p>No posts from users you follow.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Bootstrap Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+            {% endif %}
+
+            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

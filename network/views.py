@@ -18,7 +18,14 @@ def index(request):
     page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj})
 
-
+@login_required
+def following(request):
+    following_posts = Post.objects.filter(user__in=request.user.following.all()).order_by('-timestamp')
+    paginator = Paginator(following_posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "network/following.html", {"following_posts": following_posts, "page_obj": page_obj})
+    
 def login_view(request):
     if request.method == "POST":
 
