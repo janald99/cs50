@@ -120,17 +120,28 @@ def follow_user(request):
     action = data.get("action")
 
     if action == "follow":
-        request.user.following.add(user_to_follow)
         user_to_follow.followers.add(request.user)
+        request.user.following.add(user_to_follow) 
         request.user.save()
         user_to_follow.save()
-        response_data = {"message": "User followed successfully."}
+        print(user_to_follow.followers)
+        print(request.user.following)
+        response_data = {
+            "message": "User followed successfully.",
+            "followersCount": user_to_follow.followers.count(),
+            "followingCount": user_to_follow.following.count(),
+        }
     elif action == "unfollow":
-        request.user.following.remove(user_to_follow)
         user_to_follow.followers.remove(request.user)
+        request.user.following.remove(user_to_follow)
         request.user.save()
         user_to_follow.save()
-        response_data = {"message": "User unfollowed successfully."}
+        print(request.user.following)
+        response_data = {
+            "message": "User unfollowed successfully.",
+            "followersCount": user_to_follow.followers.count(),
+            "followingCount": user_to_follow.following.count(),
+        }
     else:
         response_data = {"message": "Invalid action."}
 

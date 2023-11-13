@@ -10,7 +10,13 @@
 
     {% if user.is_authenticated %}
         {% if not is_self %}
-            <button id="follow-button" data-is-following="{{ is_following }}">Follow</button>
+            <button id="follow-button">
+                {% if is_following %}
+                    Unfollow
+                {% else %}
+                    Follow
+                {% endif %}
+            </button>
         {% endif %}
     {% endif %}
 
@@ -31,10 +37,6 @@
     <script>
         // Set the CSRF token as a JavaScript variable
         const csrfToken = "{{ csrf_token }}";
-        // var followersCount = "{{ user_profile.followers.count }}";
-        // var followingCount = "{{ user_profile.following.count }}";
-        // var updatedFollowers = parseInt("{{ user_profile.followers.count }}", 10);
-        // var updatedFollowing = parseInt("{{ user_profile.following.count }}", 10);
     </script>
     <script src="{% static 'network/profile.js' %}"></script>
 {% endblock %}

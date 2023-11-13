@@ -4,9 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check if the followButton element exists
     if (followButton) {
+        // Function to get the initial follow state
+        function getInitialFollowState() {
+            return followButton.textContent.trim().toLowerCase() === "unfollow";
+        }
+
+        // Set the initial state
+        var isFollowing = getInitialFollowState();
+
         followButton.addEventListener("click", function () {
             const username = userHeader.getAttribute("data-username");
-            const isFollowing = followButton.getAttribute("data-is-following") === "true";
             const action = isFollowing ? "unfollow" : "follow";
 
             fetch('/follow', {
@@ -25,16 +32,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.message) {
                     console.log(data.message);
                 }
+
                 const newIsFollowing = !isFollowing;
-                followButton.setAttribute("data-is-following", newIsFollowing.toString());
                 followButton.textContent = newIsFollowing ? "Unfollow" : "Follow";
 
-                // const followersCountHeader = document.getElementById("follower-count");
-                // const followingCountHeader = document.getElementById("following-count");
-                
-                // console.log(typeof(updatedFollowers));
-                // followersCountHeader.textContent = "Followers: " + updatedFollowers;
-                // followingCountHeader.textContent ="Following: " + updatedFollowing;
+                const followersCountHeader = document.getElementById("follower-count");
+                const followingCountHeader = document.getElementById("following-count");
+
+                // Update follower and following counts
+                followersCountHeader.textContent = "Followers: " + data.followersCount;
+                followingCountHeader.textContent = "Following: " + data.followingCount;
+
+                // Update the state for the next click
+                isFollowing = newIsFollowing;
             });
         });
     }
