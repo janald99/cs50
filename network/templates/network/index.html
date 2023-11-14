@@ -28,7 +28,18 @@
                     <button class="save-edit-btn">Save</button>
                 </div>
                 <p>Posted on: {{ post.timestamp }}</p>
-                <p>Likes: {{ post.likes.count }}</p>
+                <p id="like-count">Likes: {{ post.likes.count }}</p>
+
+                {% if user.is_authenticated %}
+                    <button class="like-button">
+                        {% if is_liked %}
+                            Unlike
+                        {% else %}
+                            Like
+                        {% endif %}
+                    </button>
+                {% endif %}
+
                 {% if user.is_authenticated and post.user == user %}
                     <button class="edit-post-btn">Edit</button>
                 {% endif %}

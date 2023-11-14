@@ -48,6 +48,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // function handleLikeButtonClick(event) {
+    //     const postId = event.target.getAttribute('data-post-id');
+    //     const isLiked = event.target.getAttribute('data-is-liked') === "true";
+    //     const likeCountElement = event.target.querySelector('like-count');
+
+    //     fetch('/like_post', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-CSRFToken': csrf_token,
+    //         },
+    //         body: JSON.stringify({
+    //             post_id: postId,
+    //             action: isLiked ? 'unlike' : 'like',
+    //         }),
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.success) {
+    //             // Update like count and button text
+    //             likeCountElement.innerText = data.like_count;
+    //             event.target.setAttribute('data-is-liked', (!isLiked).toString());
+    //             event.target.textContent = isLiked ? 'Like' : 'Unlike';
+    //         } else {
+    //             console.error('Failed to toggle like');
+    //         }
+    //     });
+    // }
+
     // Attach event listeners to the edit and save edit buttons
     document.querySelectorAll('.edit-post-btn').forEach(button => {
         button.addEventListener('click', handleEditButtonClick);
@@ -55,5 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('.save-edit-btn').forEach(button => {
         button.addEventListener('click', handleSaveEditButtonClick);
+    });
+
+    // Attach event listeners to the like buttons
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', handleLikeButtonClick);
     });
 });

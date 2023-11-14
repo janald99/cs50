@@ -16,7 +16,15 @@ def index(request):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj})
+
+    liked_post_ids = []
+    user_likes_post = False
+    if request.user.is_authenticated:
+        liked_post_ids = Post.objects.filter(likes=request.user).values_list('id', flat=True)
+    user_likes_post = Post.likes.filter(id=request.user.id).exists()
+
+    return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj, "liked_post_ids": liked_post_ids, "is_liked": user_likes_post})
+
 
 @login_required
 def following(request):
@@ -106,6 +114,28 @@ def edit_post(request):
     post.save()
 
     return JsonResponse({"success": True})
+
+@login_required
+def like_post(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST request required.'}, status=400)
+
+    data = json.loads(request.body)
+    post_id = data.get('post_id')
+    action = data.get('action')
+
+    post = Post.objects.get(id=post_id)
+
+    if action == 'like':
+        post.likes.add(request.user)
+    elif action == 'unlike':
+        post.likes.remove(request.user)
+    else:
+        return JsonResponse({'error': 'Invalid action.'}, status=400)
+
+    post.save()
+
+    return JsonResponse({'success': True, 'like_count': post.likes.count()})
 
 def profile(request, username):
     try:
