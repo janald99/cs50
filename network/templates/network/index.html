@@ -6,7 +6,7 @@
     <h2>All Posts</h2>
 
     <!-- New Post Form -->
-    {% if user.is_authenticated %}
+    {% if can_post and user.is_authenticated %}
         <div class="new-post-form">
             <form method="post" action="{% url 'new_post' %}">
                 {% csrf_token %}

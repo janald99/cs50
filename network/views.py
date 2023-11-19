@@ -10,8 +10,15 @@ from django.urls import reverse
 from .models import User, Post
 
 
-def index(request):
-    posts = Post.objects.all().order_by('-timestamp')
+def index(request, postpage=None):
+    if postpage == "following":
+        posts = Post.objects.filter(user__in=request.user.following.all()).order_by('-timestamp')
+        can_post = False
+    else:
+        # all posts
+        posts = Post.objects.all().order_by('-timestamp')
+        can_post = True
+
     paginator = Paginator(posts, 10)
 
     page_number = request.GET.get('page')
@@ -20,9 +27,8 @@ def index(request):
     liked_post_ids = []
     if request.user.is_authenticated:
         liked_post_ids = Post.objects.filter(likes=request.user).values_list('id', flat=True)
-    
 
-    return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj, "liked_post_ids": liked_post_ids})
+    return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj, "liked_post_ids": liked_post_ids, "can_post" : can_post})
 
 
 @login_required
