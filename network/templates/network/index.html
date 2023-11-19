@@ -32,7 +32,7 @@
 
                 {% if user.is_authenticated %}
                     <button class="like-button">
-                        {% if is_liked %}
+                        {% if post.id in liked_post_ids %}
                             Unlike
                         {% else %}
                             Like

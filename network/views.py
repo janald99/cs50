@@ -18,12 +18,11 @@ def index(request):
     page_obj = paginator.get_page(page_number)
 
     liked_post_ids = []
-    user_likes_post = False
     if request.user.is_authenticated:
         liked_post_ids = Post.objects.filter(likes=request.user).values_list('id', flat=True)
-    user_likes_post = Post.likes.filter(id=request.user.id).exists()
+    
 
-    return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj, "liked_post_ids": liked_post_ids, "is_liked": user_likes_post})
+    return render(request, "network/index.html", {"posts": posts, "user": request.user, "page_obj": page_obj, "liked_post_ids": liked_post_ids})
 
 
 @login_required
