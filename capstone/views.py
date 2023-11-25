@@ -7,8 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Thread
-
+from .models import User, Show
 
 def index(request):
     return render(request, "capstone/index.html")
@@ -65,7 +64,7 @@ def register(request):
         return render(request, "capstone/register.html")
 
 # @login_required
-# def new_thread(request):
+# def new_show(request):
 #     if request.method == "POST":
 #         post_content = request.POST.get("post_content")
 #         # Create a new post and save it to the database
