@@ -63,19 +63,20 @@ def register(request):
     else:
         return render(request, "capstone/register.html")
 
-# @login_required
-# def new_show(request):
-#     if request.method == "POST":
-#         post_content = request.POST.get("post_content")
-#         # Create a new post and save it to the database
-#         new_post = Thread(user=request.user, content=post_content)
-#         new_post.save()
-#         return HttpResponseRedirect(reverse("index"))  # Redirect to the same page after posting.
-#     else:
-#         # Handle GET requests, if necessary
-#         return render(request, "capstone/index.html", {
-#             "posts": Thread.objects.all().order_by('-timestamp')
-#         })
+@login_required
+def new_show(request):
+    # if request.method == "POST":
+    #     post_content = request.POST.get("post_content")
+    #     # Create a new post and save it to the database
+    #     new_post = Review(user=request.user, content=post_content)
+    #     new_post.save()
+    #     return HttpResponseRedirect(reverse("index"))  # Redirect to the same page after posting.
+    # else:
+    #     # Handle GET requests, if necessary
+    #     return render(request, "capstone/index.html", {
+    #         "posts": Thread.objects.all().order_by('-timestamp')
+    #     })
+    return HttpResponse("hey")
     
 # @login_required
 # def edit_post(request):
