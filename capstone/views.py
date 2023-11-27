@@ -1,9 +1,8 @@
-import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -18,7 +17,11 @@ def index(request, showpage=None):
     else:
         shows = Show.objects.all().order_by('title')
         
-    return render(request, "capstone/index.html", {"shows": shows, "is_favorite_page": is_favorite_page})
+    paginator = Paginator(shows, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "capstone/index.html", {"shows": shows, "is_favorite_page": is_favorite_page, "page_obj": page_obj})
 
 def login_view(request):
     if request.method == "POST":
