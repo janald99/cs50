@@ -1,8 +1,9 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -127,6 +128,21 @@ def remove_from_favorites(request, show_id):
     request.user.favorites.remove(show)
     return HttpResponseRedirect(reverse("favorites"))
 
+@login_required
+def edit_show(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    show_id = data.get("show_id")
+    edited_description = data.get("description")
+
+    show = Show.objects.get(id=show_id)
+
+    show.description = edited_description
+    show.save()
+
+    return JsonResponse({"success": True})
 
 @login_required
 def rate_show(request, show_id):

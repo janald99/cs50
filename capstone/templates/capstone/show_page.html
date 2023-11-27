@@ -1,5 +1,4 @@
 {% extends "capstone/layout.html" %}
-
 {% load static %}
 
 {% block body %}
@@ -17,6 +16,10 @@
         </div>
         <div class="show-description">
             <p>Synopsis: {{ show.description }}</p>
+        </div>
+        <div class="edit-container" style="display: none;">
+            <textarea class="edit-textarea"></textarea>
+            <button class="save-edit-btn">Save</button>
         </div>
         <div class="show-rating">
             <p>Rating: 0({{ show.rating.count }} users)</p>
@@ -51,6 +54,10 @@
                     {% if is_in_favorites %}Remove from Favorites{% else %}Add to Favorites{% endif %}
                 </button>
             </form>
+        {% endif %}
+
+        {% if user.is_authenticated or show.user == request.user %}
+            <button class="edit-show-btn">Edit</button>
         {% endif %}
 
         <h3>Reviews</h3>

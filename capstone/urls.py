@@ -14,6 +14,6 @@ urlpatterns = [
     # path("profile/<str:username>", views.profile, name="profile"),
 
     # API routes
-    # path("edit_post", views.edit_post, name="edit_post"),
+    path("edit_show", views.edit_show, name="edit_show"),
     # path("like_post", views.like_post, name="like_post"),
 ]
