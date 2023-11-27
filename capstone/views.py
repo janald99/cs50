@@ -10,9 +10,15 @@ from django.urls import reverse
 from .models import User, Show, Rating, Review
 from .forms import ReviewForm
 
-def index(request):
-    shows = Show.objects.all().order_by('title')
-    return render(request, "capstone/index.html", {"shows": shows})
+def index(request, showpage=None):
+    is_favorite_page = False
+    if showpage == 'favorites':
+        is_favorite_page = True
+        shows = request.user.favorites.all().order_by('title')
+    else:
+        shows = Show.objects.all().order_by('title')
+        
+    return render(request, "capstone/index.html", {"shows": shows, "is_favorite_page": is_favorite_page})
 
 def login_view(request):
     if request.method == "POST":
@@ -93,11 +99,31 @@ def show_view(request, show_id):
                 review = Review(show=show, user=request.user, text=text)
                 review.save()
                 return HttpResponseRedirect(reverse("show_view", args=[show_id]))
+        elif "favorites_submit" in request.POST:
+            if request.user.is_authenticated:
+                if show in request.user.favorites.all():
+                    request.user.favorites.remove(show)
+                    show.favorites.remove(request.user)
+                else:
+                    request.user.favorites.add(show)
+                    show.favorites.add(request.user)
+            return HttpResponseRedirect(reverse("show_view", args=[show_id]))
+    
+    is_in_favorites = show in request.user.favorites.all() if request.user.is_authenticated else False
+
     return render(request, "capstone/show_page.html", {
         "show": show,
         "reviews": reviews,
-        "review_form": review_form
+        "review_form": review_form,
+        "is_in_favorites": is_in_favorites
     })
+
+@login_required
+def remove_from_favorites(request, show_id):
+    show = Show.objects.get(pk=show_id)
+    request.user.favorites.remove(show)
+    return HttpResponseRedirect(reverse("favorites"))
+
 
 @login_required
 def rate_show(request, show_id):

@@ -3,7 +3,11 @@
 {% load static %}
 
 {% block body %}
-    <h2>Show List</h2>
+    {% if is_favorite_page %}
+        <h2>Favorites List</h2>
+    {% else %}
+        <h2>Show List</h2>
+    {% endif %}
 
     <div class="show-list">
         {% for show in shows %}
