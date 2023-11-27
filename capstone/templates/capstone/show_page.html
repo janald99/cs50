@@ -1,0 +1,68 @@
+{% extends "capstone/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+    <h2>{{ show.title }}</h2>
+
+    <div class="show" data-show-id="{{ show.id }}">
+        <div class="show-creator">
+            <p>Show page created by: {{ show.creator }}</p>
+        </div>
+        <div class="show-title">
+            <p>Title: {{ show.title }}</p>
+        </div>
+        <div class="show-image">
+            <img src="{{ show.image_url }}" alt="{{ show.title }}">
+        </div>
+        <div class="show-genre">
+            <p>Genre: {{ show.genre }}</p>
+        </div>
+        <div class="show-description">
+            <p>Synopsis: {{ show.description }}</p>
+        </div>
+        <div class="show-rating">
+            <p>Rating: 0({{ show.rating.count }} users)</p>
+        </div>
+        <div class="show-favorites">
+            <p>Favorites: {{ show.favorites.count }}</p>
+        </div>
+
+        {% if user.is_authenticated %}
+            <form id="rating-form" action="{% url 'rate_show' show.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="stars" name="stars" value="">
+                <div class="star-rating">
+                    <span class="star" data-rating="1">&#9733;</span>
+                    <span class="star" data-rating="2">&#9733;</span>
+                    <span class="star" data-rating="3">&#9733;</span>
+                    <span class="star" data-rating="4">&#9733;</span>
+                    <span class="star" data-rating="5">&#9733;</span>
+                </div>
+                <button type="submit">Rate</button>
+            </form>
+
+            <form id="review_form" method="post" action="{% url 'show_view' show.id %}">
+                {% csrf_token %}
+                {{ review_form.as_p }}
+                <button type="submit" name="review_form_submit">Add Review</button>
+            </form>
+        {% endif %}
+
+        <h3>Reviews</h3>
+        <ul>
+            {% for review in reviews %}
+                <li>{{ review.user.username }}: {{ review.text }}</li>
+            {% empty %}
+                <p>No reviews yet.</p>
+            {% endfor %}
+        </ul>
+        
+        
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'capstone/show_page.js' %}"></script>
+{% endblock %}

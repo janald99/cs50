@@ -7,10 +7,12 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Show
+from .models import User, Show, Rating, Review
+from .forms import ReviewForm
 
 def index(request):
-    return render(request, "capstone/index.html")
+    shows = Show.objects.all().order_by('title')
+    return render(request, "capstone/index.html", {"shows": shows})
 
 def login_view(request):
     if request.method == "POST":
@@ -65,121 +67,52 @@ def register(request):
 
 @login_required
 def new_show(request):
-    # if request.method == "POST":
-    #     post_content = request.POST.get("post_content")
-    #     # Create a new post and save it to the database
-    #     new_post = Review(user=request.user, content=post_content)
-    #     new_post.save()
-    #     return HttpResponseRedirect(reverse("index"))  # Redirect to the same page after posting.
-    # else:
-    #     # Handle GET requests, if necessary
-    #     return render(request, "capstone/index.html", {
-    #         "posts": Thread.objects.all().order_by('-timestamp')
-    #     })
-    return HttpResponse("hey")
+    if request.method == "POST":
+        # form submission
+        creator = request.user
+        title = request.POST.get("add-show-title")
+        description = request.POST.get("add-show-description")
+        genre = request.POST.get("add-show-genre")
+        image_url = request.POST.get("add-show-image")
+        new_show = Show(creator=creator,title=title,description=description,genre=genre, image_url=image_url)
+        new_show.save()
+        return HttpResponseRedirect(reverse("index"))  # Redirect to the show list after posting a new show.
+    else:
+        return render(request, "capstone/new_show.html")
     
-# @login_required
-# def edit_post(request):
-#     if request.method != "POST":
-#         return JsonResponse({"error": "POST request required."}, status=400)
+def show_view(request, show_id):
+    show =  Show.objects.get(pk=show_id)
+    reviews = Review.objects.filter(show=show).order_by("-created_at")
 
-#     data = json.loads(request.body)
-#     post_id = data.get("post_id")
-#     edited_content = data.get("content")
+    review_form = ReviewForm()
+    if request.method == "POST":
+        if "review_form_submit" in request.POST:
+            review_form = ReviewForm(request.POST)
+            if review_form.is_valid():
+                text = review_form.cleaned_data["text"]
+                review = Review(show=show, user=request.user, text=text)
+                review.save()
+                return HttpResponseRedirect(reverse("show_view", args=[show_id]))
+    return render(request, "capstone/show_page.html", {
+        "show": show,
+        "reviews": reviews,
+        "review_form": review_form
+    })
 
-#     post = Post.objects.get(id=post_id)
-
-#     post.content = edited_content
-#     post.save()
-
-#     return JsonResponse({"success": True})
-
-# @login_required
-# def like_post(request):
-#     if request.method != 'POST':
-#         return JsonResponse({'error': 'POST request required.'}, status=400)
-
-#     data = json.loads(request.body)
-#     post_id = data.get('post_id')
-#     action = data.get('action')
-
-#     post = Post.objects.get(id=post_id)
-
-#     if action == 'like':
-#         post.likes.add(request.user)
-#     elif action == 'unlike':
-#         post.likes.remove(request.user)
-#     else:
-#         return JsonResponse({'error': 'Invalid action.'}, status=400)
-
-#     post.save()
-
-#     return JsonResponse({'success': True, 'like_count': post.likes.count()})
-
-# def profile(request, username):
-#     try:
-#         user_profile = User.objects.get(username=username)
-#     except User.DoesNotExist:
-#         return HttpResponse("User not found", status=404)
-
-#     is_self = False
-#     is_following = False
-
-#     if request.user.is_authenticated:
-#         # Check if the logged-in user is viewing their own profile
-#         is_self = user_profile == request.user
-
-#         # Check if the logged-in user is following this user
-#         if not is_self:
-#             is_following = user_profile.followers.filter(id=request.user.id).exists()
-
-#     # Retrieve the user's posts in reverse chronological order
-#     user_posts = Post.objects.filter(user=user_profile).order_by('-timestamp')
-
-#     return render(request, "network/profile.html", {
-#         "user_profile": user_profile,
-#         "is_self": is_self,
-#         "is_following": is_following,
-#         "user_posts": user_posts,
-#     })
-
-
-# @login_required
-# def follow_user(request):
-#     if request.method != "POST":
-#         return JsonResponse({"error": "POST request required."}, status=400)
-
-#     data = json.loads(request.body)
-#     username = data.get("username")
-
-#     user_to_follow = User.objects.get(username=username)
-
-#     action = data.get("action")
-
-#     if action == "follow":
-#         user_to_follow.followers.add(request.user)
-#         request.user.following.add(user_to_follow) 
-#         request.user.save()
-#         user_to_follow.save()
-#         print(user_to_follow.followers)
-#         print(request.user.following)
-#         response_data = {
-#             "message": "User followed successfully.",
-#             "followersCount": user_to_follow.followers.count(),
-#             "followingCount": user_to_follow.following.count(),
-#         }
-#     elif action == "unfollow":
-#         user_to_follow.followers.remove(request.user)
-#         request.user.following.remove(user_to_follow)
-#         request.user.save()
-#         user_to_follow.save()
-#         print(request.user.following)
-#         response_data = {
-#             "message": "User unfollowed successfully.",
-#             "followersCount": user_to_follow.followers.count(),
-#             "followingCount": user_to_follow.following.count(),
-#         }
-#     else:
-#         response_data = {"message": "Invalid action."}
-
-#     return JsonResponse(response_data)
+@login_required
+def rate_show(request, show_id):
+    if request.method == 'POST':
+        show =  Show.objects.get(pk=show_id)
+        stars = request.POST.get('stars')
+        if stars:
+            stars = int(stars)
+            # Ensure user hasn't rated the show before
+            if not Rating.objects.filter(user=request.user, show=show).exists():
+                # Create or update the rating
+                rating, created = Rating.objects.get_or_create(user=request.user, show=show)
+                rating.stars = stars
+                rating.save()
+                return HttpResponseRedirect(reverse('show_view', args=[show_id]))
+            else:
+                return HttpResponse("You have already rated this show.")
+    return HttpResponse("Invalid request.")

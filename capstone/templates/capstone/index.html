@@ -5,27 +5,33 @@
 {% block body %}
     <h2>Show List</h2>
 
-    <div id="add-show-view">
-        <h3>New Show</h3>
-        <form id="add-show-form">
-            <div class="form-group">
-                Created by: <input disabled class="form-control" value="{{ request.user.username }}" id="add-show-user" name="add-show-user">
+    <div class="show-list">
+        {% for show in shows %}
+            <div class="show" data-show-id="{{ show.id }}">
+                <div class="show-title">
+                    <h3><a href="{% url 'show_view' show.id %}">{{ show.title }}</a></h3>
+                </div>
+                <div class="show-image">
+                    <img src="{{ show.image_url }}" alt="{{ show.title }}">
+                </div>
+                <div class="show-genre">
+                    <p>Genre: {{ show.genre }}</p>
+                </div>
+                <div class="show-description">
+                    <p>Description: {{ show.description }}</p>
+                </div>
+                <div class="show-rating">
+                    <p>Rating: 0/10</p>
+                </div>
+                <div class="show-favorites">
+                    <p>Favorites: {{ show.favorites.count }}</p>
+                </div>
             </div>
-            <div class="form-group">
-                <input class="form-control" id="add-show-title" name="add-show-title" placeholder="Title">
-            </div>
-            <div class="form-group">
-                <input class="form-control" id="add-show-genre" name="add-show-genre" placeholder="Genre">
-            </div>
-            <textarea class="form-control" id="add-show-description" name="add-show-description" placeholder="Description"></textarea>
-            <div class="form-group">
-                <input class="form-control" id="add-show-image" name="add-show-image" placeholder="Image">
-            </div>
-            <input type="submit" class="btn btn-primary"/>
-            
-        </form>
+        {% empty %}
+            <p>No shows yet.</p>
+        {% endfor %}
     </div>
-
+    
 {% endblock %}
 
 {% block script %}

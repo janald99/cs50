@@ -24,10 +24,10 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" id="add-show" href="{% url 'add_show' %}">Add Show</a>
+                        <a class="nav-link" href="{% url 'index' %}">Favorites</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Favorites</a>
+                        <a class="nav-link" id="add-show" href="{% url 'new_show' %}">Add Show</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
