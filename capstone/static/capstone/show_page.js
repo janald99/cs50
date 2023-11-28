@@ -88,7 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then(data =>{
                 console.log(`Show has been rated ${rating} stars.`);
-                updateRatingUI(data.average_rating, data.total_ratings);
+                console.log(typeof data.average_rating);
+                updateRatingUI(data.average_rating.toFixed(2), data.total_ratings);
             })
             .catch(error => {
                 console.log(error);

@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.db.models import Avg
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -20,7 +19,7 @@ def index(request, showpage=None):
         shows = Show.objects.all().order_by('title')
         
     for show in shows:
-        show.average_rating = round(show.ratings.aggregate(Avg('stars'))['stars__avg'] or 0, 2)
+        show.update_average_rating()
         show.total_ratings = show.ratings.count()
         
     paginator = Paginator(shows, 10)
@@ -134,7 +133,7 @@ def show_view(request, show_id):
     
     is_in_favorites = show in request.user.favorites.all() if request.user.is_authenticated else False
 
-    average_rating = round(show.ratings.aggregate(Avg('stars'))['stars__avg'] or 0, 2)
+    show.update_average_rating()
     total_ratings = show.ratings.count()
 
     return render(request, "capstone/show_page.html", {
@@ -142,7 +141,7 @@ def show_view(request, show_id):
         "reviews": reviews,
         "review_form": review_form,
         "is_in_favorites": is_in_favorites,
-        "average_rating": average_rating,
+        "average_rating": show.average_rating,
         "total_ratings": total_ratings
     })
 
@@ -189,12 +188,13 @@ def rate_show(request, show_id):
                 new_rating = Rating(user=request.user, rated_show=show, stars=stars)
                 new_rating.save()
 
-            average_rating = round(show.ratings.aggregate(Avg('stars'))['stars__avg'] or 0, 2)
+            show.update_average_rating()
+            print(type(show.average_rating))
             total_ratings = show.ratings.count()
 
             return JsonResponse({
                 "success": True,
-                "average_rating": average_rating,
+                "average_rating": show.average_rating,
                 "total_ratings": total_ratings
             })
         else:

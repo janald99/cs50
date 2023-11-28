@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
+from django.db.models import Avg
 
 
 class User(AbstractUser):
@@ -18,9 +19,15 @@ class Show(models.Model):
 
     favorites = models.ManyToManyField(User, related_name='liked_shows', blank=True)  # Users who favorited the show
     image_url = models.TextField()
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f"{self.title}"
+    
+    def update_average_rating(self):
+        average = self.ratings.aggregate(Avg('stars'))['stars__avg'] or 0
+        self.average_rating = round(average, 2)
+        self.save()
     
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
