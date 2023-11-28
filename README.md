@@ -38,7 +38,7 @@ I also experimented the different forms of logic handling. For some features, i 
 - Top recommendations page (top 10 highest ratings)
 - improvements in future iterations: Use dropdown list for Genre, refactor genre into a list of strings rather than a string itself.
 
-## What’s contained in each file you created.
+## What’s contained in each file
 
 templates/capstone
 - index.html: the main page which features the list of shows. could be filtered to all shows, favorites, and by search results.
@@ -56,8 +56,6 @@ python files
 - models.py: Contains the Models that are registered in the database. Contains User, Show, Rating, and Review classes respectively.
 - urls.py: Defines url patterns, and direct logic to the views.py on the backend.
 - views.py: Main backbone of the backend. Handles rendering of pages, updating of Models, and all other backend operations.
-
-The other files are part of the Django template and framework, so I will refrain from explaining the other miscellaneous files.
 
 
 ## How to run the application.
