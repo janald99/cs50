@@ -31,25 +31,24 @@
     <div class="show-list">
         {% for show in page_obj %}
             <div class="show" data-show-id="{{ show.id }}">
-                <div class="show-title">
-                    <h3><a href="{% url 'show_view' show.id %}">{{ show.title }}</a></h3>
-                </div>
-                <div class="show-image">
-                    <img src="{{ show.image_url }}" alt="{{ show.title }}">
-                </div>
-                <div class="show-genre">
-                    <p>Genre: {{ show.genre }}</p>
-                </div>
-                <div class="show-description">
-                    <p>Synopsis: {{ show.description }}</p>
-                </div>
-                <div class="show-rating">
-                    <p>Rating: {{ show.average_rating }}/5 ({{ show.total_ratings }} users)</p>
-                </div>
-                <div class="show-favorites">
-                    <p>Favorites: {{ show.favorites.count }}</p>
+                <div class="show-content">
+                    <div class="show-image">
+                        <img src="{{ show.image_url }}" alt="{{ show.title }}">
+                    </div>
+                    <div class="show-details">
+                        <div class="show-title">
+                            <h3><a href="{% url 'show_view' show.id %}">{{ show.title }}</a></h3>
+                        </div>
+                        <div class="show-info">
+                            <p>Genre: {{ show.genre }}</p>
+                            <p>Synopsis: {{ show.description }}</p>
+                            <p>Rating: {{ show.average_rating }}/5 ({{ show.total_ratings }} users)</p>
+                            <p>Favorites: {{ show.favorites.count }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        
         {% empty %}
             <p>No shows yet.</p>
         {% endfor %}

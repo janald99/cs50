@@ -5,4 +5,6 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['text']
-        
+        labels = {
+            'text': 'Your Review:',  # Set a custom label for the 'text' field
+        }

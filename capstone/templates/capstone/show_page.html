@@ -9,7 +9,7 @@
             <p>Show page added by: <a href="{% url 'profile' show.creator.username %}"><strong>{{ show.creator.username }}</strong></a></p>
         </div>
         <div class="show-image">
-            <img src="{{ show.image_url }}" alt="{{ show.title }}">
+            <img src="{{ show.image_url }}" alt="{{ show.title }}" width="10" height="5">
         </div>
         <div class="show-genre">
             <p>Genre: {{ show.genre }}</p>
@@ -33,6 +33,14 @@
         </div>
 
         {% if user.is_authenticated %}
+
+            <form method="post" action="{% url 'show_view' show.id %}">
+                {% csrf_token %}
+                <button type="submit" name="favorites_submit">
+                    {% if is_in_favorites %}Remove from Favorites{% else %}Add to Favorites{% endif %}
+                </button>
+            </form>
+
             <form id="rating-form" action="{% url 'rate_show' show.id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" id="stars" name="stars" value="">
@@ -50,13 +58,6 @@
                 {% csrf_token %}
                 {{ review_form.as_p }}
                 <button type="submit" name="review_form_submit">Add Review</button>
-            </form>
-
-            <form method="post" action="{% url 'show_view' show.id %}">
-                {% csrf_token %}
-                <button type="submit" name="favorites_submit">
-                    {% if is_in_favorites %}Remove from Favorites{% else %}Add to Favorites{% endif %}
-                </button>
             </form>
         {% endif %}
 
