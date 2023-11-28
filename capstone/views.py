@@ -11,10 +11,11 @@ from .models import User, Show, Rating, Review
 from .forms import ReviewForm
 
 def index(request, showpage=None):
-    is_favorite_page = False
     if showpage == 'favorites':
-        is_favorite_page = True
         shows = request.user.favorites.all().order_by('title')
+    elif showpage == 'recommendations':
+        # top 10 highest avg rating
+        shows = Show.objects.all().order_by('-average_rating')[:10]
     else:
         shows = Show.objects.all().order_by('title')
         
@@ -26,7 +27,7 @@ def index(request, showpage=None):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "capstone/index.html", {"shows": shows, "is_favorite_page": is_favorite_page, "page_obj": page_obj})
+    return render(request, "capstone/index.html", {"shows": shows, "showpage": showpage, "page_obj": page_obj})
 
 def login_view(request):
     if request.method == "POST":

@@ -3,10 +3,12 @@
 {% load static %}
 
 {% block body %}
-    {% if is_favorite_page %}
+    {% if showpage == 'favorites' %}
         <h2>Favorites List</h2>
+    {% elif showpage == 'recommendations' %}
+        <h2>What's Hot</h2>
     {% else %}
-        <h2>Show List</h2>
+        <h2>All Shows</h2>
     {% endif %}
 
     <div class="show-list">

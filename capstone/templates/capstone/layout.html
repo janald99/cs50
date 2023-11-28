@@ -22,9 +22,12 @@
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'index' %}">All Shows</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recommendations' %}">What's Hot</a>
+                </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'favorites' %}">Favorites</a>
+                        <a class="nav-link" href="{% url 'favorites' %}">Your Favorites</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="add-show" href="{% url 'new_show' %}">Add Show</a>
