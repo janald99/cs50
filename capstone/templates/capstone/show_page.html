@@ -6,7 +6,7 @@
 
     <div class="show" data-show-id="{{ show.id }}">
         <div class="show-creator">
-            <p>Show page added by: {{ show.creator }}</p>
+            <p>Show page added by: <a href="{% url 'profile' show.creator.username %}"><strong>{{ show.creator.username }}</strong></a></p>
         </div>
         <div class="show-image">
             <img src="{{ show.image_url }}" alt="{{ show.title }}">
@@ -26,7 +26,7 @@
             <button class="save-edit-btn">Save</button>
         </div>
         <div class="show-rating">
-            <p>Rating: 0({{ show.rating.count }} users)</p>
+            <p>Rating: {{ average_rating }}/5 ({{ total_ratings }} users)</p>
         </div>
         <div class="show-favorites">
             <p>Favorites: {{ show.favorites.count }}</p>
@@ -36,6 +36,7 @@
             <form id="rating-form" action="{% url 'rate_show' show.id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" id="stars" name="stars" value="">
+                <h4>Rate</h4>
                 <div class="star-rating">
                     <span class="star" data-rating="1">&#9733;</span>
                     <span class="star" data-rating="2">&#9733;</span>
@@ -43,7 +44,6 @@
                     <span class="star" data-rating="4">&#9733;</span>
                     <span class="star" data-rating="5">&#9733;</span>
                 </div>
-                <button type="submit">Rate</button>
             </form>
 
             <form id="review_form" method="post" action="{% url 'show_view' show.id %}">
@@ -63,7 +63,7 @@
         <h3>Reviews</h3>
         <ul>
             {% for review in reviews %}
-                <li>{{ review.user.username }}: {{ review.text }}</li>
+                <li><a href="{% url 'profile' review.user.username %}"><strong>{{ review.user.username }}</strong></a>: {{ review.text }}</li>
             {% empty %}
                 <p>No reviews yet.</p>
             {% endfor %}

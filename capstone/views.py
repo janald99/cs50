@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
+from django.db.models import Avg
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -17,6 +18,10 @@ def index(request, showpage=None):
         shows = request.user.favorites.all().order_by('title')
     else:
         shows = Show.objects.all().order_by('title')
+        
+    for show in shows:
+        show.average_rating = round(show.ratings.aggregate(Avg('stars'))['stars__avg'] or 0, 2)
+        show.total_ratings = show.ratings.count()
         
     paginator = Paginator(shows, 10)
     page_number = request.GET.get('page')
@@ -74,6 +79,20 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "capstone/register.html")
+    
+def profile(request, username):
+    try:
+        user_profile = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return HttpResponse("User not found", status=404)
+
+    # Retrieve the user's posts in reverse chronological order
+    user_shows = Show.objects.filter(creator=user_profile).order_by('title')
+
+    return render(request, "capstone/profile.html", {
+        "user_profile": user_profile,
+        "user_shows": user_shows,
+    })
 
 @login_required
 def new_show(request):
@@ -115,11 +134,16 @@ def show_view(request, show_id):
     
     is_in_favorites = show in request.user.favorites.all() if request.user.is_authenticated else False
 
+    average_rating = round(show.ratings.aggregate(Avg('stars'))['stars__avg'] or 0, 2)
+    total_ratings = show.ratings.count()
+
     return render(request, "capstone/show_page.html", {
         "show": show,
         "reviews": reviews,
         "review_form": review_form,
-        "is_in_favorites": is_in_favorites
+        "is_in_favorites": is_in_favorites,
+        "average_rating": average_rating,
+        "total_ratings": total_ratings
     })
 
 @login_required
@@ -147,17 +171,32 @@ def edit_show(request):
 @login_required
 def rate_show(request, show_id):
     if request.method == 'POST':
-        show =  Show.objects.get(pk=show_id)
-        stars = request.POST.get('stars')
+        show = Show.objects.get(pk=show_id)
+        data = json.loads(request.body)
+        stars = data.get('stars')
+
         if stars:
             stars = int(stars)
-            # Ensure user hasn't rated the show before
-            if not Rating.objects.filter(user=request.user, show=show).exists():
-                # Create or update the rating
-                rating, created = Rating.objects.get_or_create(user=request.user, show=show)
-                rating.stars = stars
-                rating.save()
-                return HttpResponseRedirect(reverse('show_view', args=[show_id]))
+            # Check if the user has already rated this show
+            existing_rating = Rating.objects.filter(user=request.user, rated_show=show).first()
+
+            if existing_rating:
+                # If there's an existing rating, update it with the new stars
+                existing_rating.stars = stars
+                existing_rating.save()
             else:
-                return HttpResponse("You have already rated this show.")
-    return HttpResponse("Invalid request.")
+                # If no existing rating, create a new one
+                new_rating = Rating(user=request.user, rated_show=show, stars=stars)
+                new_rating.save()
+
+            average_rating = round(show.ratings.aggregate(Avg('stars'))['stars__avg'] or 0, 2)
+            total_ratings = show.ratings.count()
+
+            return JsonResponse({
+                "success": True,
+                "average_rating": average_rating,
+                "total_ratings": total_ratings
+            })
+        else:
+            return JsonResponse({"error": "Stars field is missing in the request."}, status=400)
+    return JsonResponse({"error": "Invalid request method."}, status=405)

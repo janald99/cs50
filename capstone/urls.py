@@ -11,7 +11,7 @@ urlpatterns = [
     path("show/<int:show_id>", views.show_view, name="show_view"),
     path("show/<int:show_id>/rate", views.rate_show, name="rate_show"),
     path("favorites", views.index,{'showpage': 'favorites'}, name="favorites"),
-    # path("profile/<str:username>", views.profile, name="profile"),
+    path("profile/<str:username>", views.profile, name="profile"),
 
     # API routes
     path("edit_show", views.edit_show, name="edit_show"),
