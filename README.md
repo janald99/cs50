@@ -58,7 +58,7 @@ python files
 - views.py: Main backbone of the backend. Handles rendering of pages, updating of Models, and all other backend operations.
 
 
-## How to run the application.
+## How to run the application
 
 1. **Clone the Project Repository:**
     ```bash
