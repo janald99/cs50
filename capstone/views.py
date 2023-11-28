@@ -4,18 +4,21 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User, Show, Rating, Review
 from .forms import ReviewForm
 
-def index(request, showpage=None):
+def index(request, showpage=None, query=None):
     if showpage == 'favorites':
         shows = request.user.favorites.all().order_by('title')
     elif showpage == 'recommendations':
         # top 10 highest avg rating
         shows = Show.objects.all().order_by('-average_rating')[:10]
+    elif showpage == 'search_results':
+        query = request.GET.get('q')
+        shows = Show.objects.filter(title__icontains=query).order_by('title')
     else:
         shows = Show.objects.all().order_by('title')
         
@@ -23,11 +26,11 @@ def index(request, showpage=None):
         show.update_average_rating()
         show.total_ratings = show.ratings.count()
         
-    paginator = Paginator(shows, 10)
+    paginator = Paginator(shows, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "capstone/index.html", {"shows": shows, "showpage": showpage, "page_obj": page_obj})
+    return render(request, "capstone/index.html", {"shows": shows, "showpage": showpage, "page_obj": page_obj, "query": query})
 
 def login_view(request):
     if request.method == "POST":
@@ -105,7 +108,7 @@ def new_show(request):
         image_url = request.POST.get("add-show-image")
         new_show = Show(creator=creator,title=title,description=description,genre=genre, image_url=image_url)
         new_show.save()
-        return HttpResponseRedirect(reverse("index"))  # Redirect to the show list after posting a new show.
+        return HttpResponseRedirect(reverse("show_view", args=[new_show.id]))
     else:
         return render(request, "capstone/new_show.html")
     
@@ -201,3 +204,19 @@ def rate_show(request, show_id):
         else:
             return JsonResponse({"error": "Stars field is missing in the request."}, status=400)
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+# def search(request):
+#     query_title = request.GET.get("q")
+#     if query_title:
+#         exact_show = util.get_show(query)
+#         if exact_show:
+#             return redirect(reverse("show", args=[query]))
+#         else:
+#             matching_entries = [
+#                 show for show in util.list_entries() if query.lower() in show.titlelower()]
+#             return render(request, "capstone/index.html", {
+#                 "search_results": matching_entries
+#             })
+#     else:
+#         return redirect("index")

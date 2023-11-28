@@ -3,12 +3,29 @@
 {% load static %}
 
 {% block body %}
-    {% if showpage == 'favorites' %}
-        <h2>Favorites List</h2>
-    {% elif showpage == 'recommendations' %}
-        <h2>What's Hot</h2>
+    {% if query %}
+        <h2>Search Results for "{{ query }}"</h2>
     {% else %}
-        <h2>All Shows</h2>
+        {% if showpage == 'favorites' %}
+            <h2>Your Favorites</h2>
+        {% elif showpage == 'recommendations' %}
+            <h2>Top Shows by Rating</h2>
+        {% else %}
+            <h2>All Shows</h2>
+        {% endif %}
+    {% endif %}
+
+    {% if showpage == 'search_results' or not showpage %}
+    <div class="sidebar col-lg-2 col-md-3">
+        <form action="{% url 'search' %}" method="GET">
+        <input
+            class="search"
+            type="text"
+            name="q"
+            placeholder="Search for Shows"
+        />
+        </form>
+    <div>
     {% endif %}
 
     <div class="show-list">

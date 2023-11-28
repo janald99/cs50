@@ -110,7 +110,9 @@ document.addEventListener('DOMContentLoaded', function() {
  
     // Attach event listener to the save edit button
     const saveEditbutton = document.querySelector('.save-edit-btn');
-    saveEditbutton.addEventListener('click', handleSaveEditButtonClick);
+    if (saveEditbutton) {
+        saveEditbutton.addEventListener('click', handleSaveEditButtonClick);
+    }
 
 
 

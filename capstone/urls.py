@@ -13,6 +13,7 @@ urlpatterns = [
     path("favorites", views.index,{'showpage': 'favorites'}, name="favorites"),
     path("recommendations", views.index,{'showpage': 'recommendations'}, name="recommendations"),
     path("profile/<str:username>", views.profile, name="profile"),
+    path("search", views.index, {'showpage': 'search_results'}, name="search"),
 
     # API routes
     path("edit_show", views.edit_show, name="edit_show"),
