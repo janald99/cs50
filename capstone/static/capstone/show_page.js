@@ -1,16 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("hey");
+    const synopsisText = document.querySelector('.synopsis-text');
+    const editableContent = document.querySelector('.edit-container');
+    const editTextarea = document.querySelector('.edit-textarea');
+
     // Function to toggle the edit container visibility
     function toggleEditContainer() {
-        const editContainer = document.querySelector('.edit-container');
-        const editTextarea = document.querySelector('.edit-textarea');
+        editableContent.style.display = (editableContent.style.display === 'none') ? 'block' : 'none';
 
-        // Toggle visibility
-        editContainer.style.display = (editContainer.style.display === 'none') ? 'block' : 'none';
-
-        // If the edit container is visible, set the description of the textarea to the current show description
-        if (editContainer.style.display === 'block') {
-            editTextarea.value = document.querySelector('.show-description p').innerText;
+        if (editableContent.style.display === 'block') {
+            editTextarea.value = synopsisText.textContent;
         }
     }
 
@@ -24,12 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const editTextarea = document.querySelector('.edit-textarea');
         const editedDescription = editTextarea.value;
 
-        // Use AJAX to send the edited description to the server
         fetch(`/edit_show`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrf_token,  // Make sure to replace csrf_token with the actual token value
+                'X-CSRFToken': csrf_token,  
             },
             body: JSON.stringify({ description: editedDescription , show_id: showId}),
         })
@@ -37,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             // Update the show description on success
             if (data.success) {
-                document.querySelector('.show-description p').innerText = editedDescription;
-                toggleEditContainer();  // Hide the edit container
+                synopsisText.textContent = editedDescription;
+                toggleEditContainer();  // Hide the edit container after saving
             } else {
                 console.error('Failed to save edited description');
             }

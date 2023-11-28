@@ -15,9 +15,13 @@
             <p>Genre: {{ show.genre }}</p>
         </div>
         <div class="show-description">
-            <p>Synopsis: {{ show.description }}</p>
+            <p>Synopsis: <span class="synopsis-text">{{ show.description }}</span></p>
         </div>
+        {% if user.is_authenticated and show.creator == request.user %}
+            <button class="edit-show-btn">Edit</button>
+        {% endif %}
         <div class="edit-container" style="display: none;">
+            {% csrf_token %}
             <textarea class="edit-textarea"></textarea>
             <button class="save-edit-btn">Save</button>
         </div>
@@ -56,10 +60,6 @@
             </form>
         {% endif %}
 
-        {% if user.is_authenticated or show.user == request.user %}
-            <button class="edit-show-btn">Edit</button>
-        {% endif %}
-
         <h3>Reviews</h3>
         <ul>
             {% for review in reviews %}
@@ -72,8 +72,9 @@
         
     </div>
 
-{% endblock %}
-
-{% block script %}
+    <script>
+        const csrf_token = "{{ csrf_token }}";
+    </script>
     <script src="{% static 'capstone/show_page.js' %}"></script>
+
 {% endblock %}
