@@ -36,7 +36,7 @@
             <form id="rating-form" action="{% url 'rate_show' show.id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" id="stars" name="stars" value="">
-                <h4>Rate</h4>
+                <h4>Rate this show:</h4>
                 <div class="star-rating">
                     <span class="star" data-rating="1">&#9733;</span>
                     <span class="star" data-rating="2">&#9733;</span>
