@@ -42,9 +42,9 @@ This project is a front-end application for an email client that makes API calls
     ```
     At the main project directory level, you should be able to see files like manage.py, and folders like mail and project3.
 
-2. **Navigate to Capstone branch:**
+2. **Navigate to mail branch:**
     ```bash
-    git checkout web50/projects/2020/x/capstone
+    git checkout web50/projects/2020/x/mail
     ```
 
 3. **Install Dependencies:**
