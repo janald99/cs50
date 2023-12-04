@@ -1,6 +1,6 @@
-# About this Project
+# Harvard's CS50'S Web Programming with Python and Javascript
 
-This project is part of [CS50's Web Programming with Python and JavaScript](https://pll.harvard.edu/course/cs50s-web-programming-python-and-javascript/) course, consisting of six subprojects:
+This project is part of [CS50's Web Programming with Python and JavaScript](https://pll.harvard.edu/course/cs50s-web-programming-python-and-javascript/) course, consisting of 6 subprojects:
 
 - **Search**: A front-end application for Google Search, Google Image Search, and Google Advanced Search.
 - **Wiki**: An online encyclopedia similar to Wikipedia.
