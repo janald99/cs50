@@ -1,21 +1,21 @@
-Project 0: Search
-In this task, i aim to create my own front end for Google Search,
-by exploring Googleís interface to identify what GET parameters it expects and adding the necessary HTML and CSS.
+## About my Project
+This project is a front-end application for Google Search, Google Image Search, and Google Advanced Search.
 
-CS50 project specifications:
-1. Your website should have at least three pages: one for regular Google Search (which must be called index.html), one for Google Image Search, and one for Google Advanced Search.
-2. On the Google Search page, there should be links in the upper-right of the page to go to Image Search or Advanced Search. On each of the other two pages, there should be a link in the upper-right to go back to Google Search.
-3. On the Google Search page, the user should be able to type in a query, click ìGoogle Searchî, and be taken to the Google search results for that page.
-4. Like Googleís own, your search bar should be centered with rounded corners. The search button should also be centered, and should be beneath the search bar.
-5. On the Google Image Search page, the user should be able to type in a query, click a search button, and be taken to the Google Image search results for that page.
-6. On the Google Advanced Search page, the user should be able to provide input for the following four fields (taken from Googleís own advanced search options)
-7. Find pages withÖ ìall these words:î
-8. Find pages withÖ ìthis exact word or phrase:î
-9. Find pages withÖ ìany of these words:î
-10. Find pages withÖ ìnone of these words:î
-11. Like Googleís own Advanced Search page, the four options should be stacked vertically, and all of the text fields should be left aligned.
-12. Consistent with Googleís own CSS, the ìAdvanced Searchî button should be blue with white text.
-13. When the ìAdvanced Searchî button is clicked, the user should be taken to the search results page for their given query.
-14. Add an ìIím Feeling Luckyî button to the main Google Search page. Consistent with Googleís own behavior, clicking this link should take users directly to the first Google search result for the query, bypassing the normal results page.
-15. You may encounter a redirect notice when using the ìIím Feeling Luckyî button. Not to worry! This is an expected consequence of a security feature implemented by Google.
-16. The CSS you write should resemble Googleís own aesthetics.
+## My feature requirements
+- Your website should have at least three pages: one for regular Google Search (which must be called index.html), one for Google Image Search, and one for Google Advanced Search.
+- On the Google Search page, there should be links in the upper-right of the page to go to Image Search or Advanced Search. On each of the other two pages, there should be a link in the upper-right to go back to Google Search.
+- On the Google Search page, the user should be able to type in a query, click ‚ÄúGoogle Search‚Äù, and be taken to the Google search results for that page.
+- Like Google‚Äôs own, your search bar should be centered with rounded corners. The search button should also be centered, and should be beneath the search bar.
+- On the Google Image Search page, the user should be able to type in a query, click a search button, and be taken to the Google Image search results for that page.
+- On the Google Advanced Search page, the user should be able to provide input for the following four fields (taken from Google‚Äôs own advanced search options)
+  - Find pages with‚Ä¶ ‚Äúall these words:‚Äù
+  - Find pages with‚Ä¶ ‚Äúthis exact word or phrase:‚Äù
+  - Find pages with‚Ä¶ ‚Äúany of these words:‚Äù
+  - Find pages with‚Ä¶ ‚Äúnone of these words:‚Äù
+- Like Google‚Äôs own Advanced Search page, the four options should be stacked vertically, and all of the text fields should be left aligned.
+- Consistent with Google‚Äôs own CSS, the ‚ÄúAdvanced Search‚Äù button should be blue with white text.
+- When the ‚ÄúAdvanced Search‚Äù button is clicked, the user should be taken to the search results page for their given query.
+- Add an ‚ÄúI‚Äôm Feeling Lucky‚Äù button to the main Google Search page. Consistent with Google‚Äôs own behavior, clicking this link should take users directly to the first Google search result for the query, bypassing the normal results page.
+- You may encounter a redirect notice when using the ‚ÄúI‚Äôm Feeling Lucky‚Äù button. Not to worry! This is an expected consequence of a security feature implemented by Google.
+- The CSS written should resemble Google‚Äôs own aesthetics.
+
