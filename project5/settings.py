@@ -10,12 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from dotenv import load_dotenv
 from pathlib import Path
 
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Path to your .env file
+dotenv_path = BASE_DIR / '.env'
+
+# Load the variables from .env
+load_dotenv(dotenv_path)
 
 
 # Quick-start development settings - unsuitable for production
@@ -123,7 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILE_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
